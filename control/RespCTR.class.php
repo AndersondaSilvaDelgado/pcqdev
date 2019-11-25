@@ -18,11 +18,11 @@ class RespCTR {
 
         $versao = str_replace("_", ".", $versao);
         
-        $questaoDAO = new QuestaoDAO();
+        $respDAO = new RespDAO();
         
         if($versao >= 1.00){
         
-            $dados = array("dados" => $questaoDAO->dados());
+            $dados = array("dados" => $respDAO->dados());
             $json_str = json_encode($dados);
 
             return $json_str;

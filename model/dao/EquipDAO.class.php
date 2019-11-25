@@ -41,4 +41,56 @@ class EquipDAO extends Conn {
         
     }
     
+    public function verifEquip($idCabec, $equip) {
+
+        $select = " SELECT "
+                . " COUNT(*) AS QTDE "
+                . " FROM "
+                . " PCQ_EQUIP "
+                . " WHERE "
+                . " EQUIP_ID = " . $equip->idQuestaoItemAbord
+                . " AND "
+                . " DTHR_CEL = TO_DATE('" . $equip->dthrItemAbord . "','DD/MM/YYYY HH24:MI') "
+                . " AND "
+                . " CABEC_ID = " . $idCabec;
+
+        $this->Conn = parent::getConn();
+        $this->Read = $this->Conn->prepare($select);
+        $this->Read->setFetchMode(PDO::FETCH_ASSOC);
+        $this->Read->execute();
+        $result = $this->Read->fetchAll();
+
+        foreach ($result as $item) {
+            $v = $item['QTDE'];
+        }
+
+        return $v;
+    }
+
+    public function insEquip($idCabec, $equip) {
+
+        $ajusteDataHoraDAO = new AjusteDataHoraDAO();
+
+        $sql = "INSERT INTO PST_ABORD_ITEM ("
+                . " CABEC_ID "
+                . " , EQUIP_ID "
+                . " , TIPO "
+                . " , DTHR "
+                . " , DTHR_CEL "
+                . " , DTHR_TRANS "
+                . " ) "
+                . " VALUES ("
+                . " " . $idCabec
+                . " , " . $equip->idEquip
+                . " , " . $equip->tipoEquip
+                . " , " . $ajusteDataHoraDAO->dataHoraGMT($equip->dthrEquip)
+                . " , TO_DATE('" . $equip->dthrEquip . "','DD/MM/YYYY HH24:MI') "
+                . " , SYSDATE "
+                . " )";
+
+        $this->Conn = parent::getConn();
+        $this->Create = $this->Conn->prepare($sql);
+        $this->Create->execute();
+    }
+    
 }

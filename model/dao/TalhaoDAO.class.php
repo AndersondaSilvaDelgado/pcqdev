@@ -36,4 +36,54 @@ class TalhaoDAO extends Conn {
         
     }
     
+    public function verifTalhao($idCabec, $talhao) {
+
+        $select = " SELECT "
+                . " COUNT(*) AS QTDE "
+                . " FROM "
+                . " PCQ_TALHAO "
+                . " WHERE "
+                . " TALHAO_ID = " . $talhao->idTalhao
+                . " AND "
+                . " DTHR_CEL = TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
+                . " AND "
+                . " CABEC_ID = " . $idCabec;
+
+        $this->Conn = parent::getConn();
+        $this->Read = $this->Conn->prepare($select);
+        $this->Read->setFetchMode(PDO::FETCH_ASSOC);
+        $this->Read->execute();
+        $result = $this->Read->fetchAll();
+
+        foreach ($result as $item) {
+            $v = $item['QTDE'];
+        }
+
+        return $v;
+    }
+
+    public function insTalhao($idCabec, $talhao) {
+
+        $ajusteDataHoraDAO = new AjusteDataHoraDAO();
+
+        $sql = "INSERT INTO PST_ABORD_ITEM ("
+                . " CABEC_ID "
+                . " , TALHAO_ID   "
+                . " , DTHR "
+                . " , DTHR_CEL "
+                . " , DTHR_TRANS "
+                . " ) "
+                . " VALUES ("
+                . " " . $idCabec
+                . " , " . $talhao->idTalhao
+                . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao>dthrTalhao)
+                . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
+                . " , SYSDATE "
+                . " )";
+
+        $this->Conn = parent::getConn();
+        $this->Create = $this->Conn->prepare($sql);
+        $this->Create->execute();
+    }
+    
 }

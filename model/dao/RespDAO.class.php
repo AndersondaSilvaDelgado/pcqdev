@@ -18,15 +18,15 @@ class RespDAO extends Conn  {
 
         $select = "SELECT " 
                         . " ALQUEST_ID AS \"idResp\" "
-                        . " , ITQUEST_ID AS \"idQuest\" "
-                        . " , ITQUEST_ID_SUB AS \"idSubResp\" "
-                        . " , SEQ AS \"seqQuest\" "
-                        . " , DESCR AS \"descrQuest\" "
+                        . " , ITQUEST_ID AS \"idQuestao\" "
+                        . " , NVL(ITQUEST_ID_SUB, 0) AS \"idSubResp\" "
+                        . " , SEQ AS \"seqResp\" "
+                        . " , DESCR AS \"descrResp\" "
                     . " FROM " 
-                        . " VMB_QUEST_QUEIMADA"
-                    . " WHERE "
-                        . " SUB_PERG = 0 "
-                    . " ORDER BY SEQ ASC ";
+                        . " VMB_RESP_QUEIMADA "
+                    . " ORDER BY "
+                        . " SEQ "
+                    . " ASC ";
         
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);

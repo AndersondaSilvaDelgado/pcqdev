@@ -17,14 +17,16 @@ class QuestaoDAO extends Conn {
     public function dados() {
 
         $select = "SELECT " 
-                        . " ITQUEST_ID AS \"idQuest\" "
-                        . " , SEQ AS \"seqQuest\" "
-                        . " , DESCR AS \"descrQuest\" "
+                        . " ITQUEST_ID AS \"idQuestao\" "
+                        . " , SEQ AS \"seqQuestao\" "
+                        . " , DESCR AS \"descrQuestao\" "
                     . " FROM " 
                         . " VMB_QUEST_QUEIMADA"
                     . " WHERE "
                         . " SUB_PERG = 0 "
-                    . " ORDER BY SEQ ASC ";
+                    . " ORDER BY "
+                        . " SEQ "
+                    . " ASC ";
         
         $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
