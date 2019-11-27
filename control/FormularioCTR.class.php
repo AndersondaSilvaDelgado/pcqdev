@@ -5,7 +5,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+require_once('../model/dao/CabecDAO.class.php');
+require_once('../model/dao/ItemDAO.class.php');
+require_once('../model/dao/EquipDAO.class.php');
+require_once('../model/dao/OrgaoAmbDAO.class.php');
+require_once('../model/dao/TalhaoDAO.class.php');
 /**
  * Description of Formulario
  *
@@ -91,7 +95,7 @@ class FormularioCTR {
     
     private function salvarTalhao($idBolBD, $talhaoDados) {
         $talhaoDAO = new TalhaoDAO();
-        foreach ($talhaoDados as $foto) {
+        foreach ($talhaoDados as $talhao) {
             $v = $talhaoDAO->verifTalhao($idBolBD, $talhao);
             if ($v == 0) {
                 $talhaoDAO->insTalhao($idBolBD, $talhao);

@@ -67,6 +67,38 @@ class CabecDAO extends Conn {
 
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
+        if ($cabec->haIncCanaCabec == 0) {
+            $cabec->haIncCanaCabec = 'null';
+        }
+        
+        if ($cabec->haIncPalhadaCabec == 0) {
+            $cabec->haIncPalhadaCabec = 'null';
+        }
+        
+        if ($cabec->haIncResLegalCabec == 0) {
+            $cabec->haIncResLegalCabec = 'null';
+        }
+        
+        if ($cabec->haIncAppCabec == 0) {
+            $cabec->haIncAppCabec = 'null';
+        }
+        
+        if ($cabec->haIncAreaComumCabec == 0) {
+            $cabec->haIncAreaComumCabec= 'null';
+        }
+        
+        if ($cabec->qtdeBrigadistaCabec == 0) {
+            $cabec->qtdeBrigadistaCabec = 'null';
+        }
+        
+        if ($cabec->empresaTercCabec != 'null') {
+            $cabec->empresaTercCabec = "'" . $cabec->empresaTercCabec . "'";
+        }
+        
+        if ($cabec->comentCabec != 'null') {
+            $cabec->comentCabec = "'" . $cabec->comentCabec . "'";
+        }
+        
         $sql = "INSERT INTO PCQ_CABECALHO ("
                 . " MATRIC_FUNC "
                 . " , PROPRAGR_ID "
@@ -91,8 +123,8 @@ class CabecDAO extends Conn {
                 . " , " . $cabec->haIncAppCabec
                 . " , " . $cabec->haIncAreaComumCabec
                 . " , " . $cabec->qtdeBrigadistaCabec
-                . " , '" . $cabec->empresaTercCabec . "'"
-                . " , '" . $cabec->comentCabec . "'"
+                . " , " . $cabec->empresaTercCabec
+                . " , " . $cabec->comentCabec
                 . " , " . $ajusteDataHoraDAO->dataHoraGMT($cabec->dthrCabec)
                 . " , TO_DATE('" . $cabec->dthrCabec. "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "

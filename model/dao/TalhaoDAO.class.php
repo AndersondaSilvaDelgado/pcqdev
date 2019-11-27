@@ -66,7 +66,7 @@ class TalhaoDAO extends Conn {
 
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
-        $sql = "INSERT INTO PST_ABORD_ITEM ("
+        $sql = "INSERT INTO PCQ_TALHAO ("
                 . " CABEC_ID "
                 . " , TALHAO_ID   "
                 . " , DTHR "
@@ -76,7 +76,7 @@ class TalhaoDAO extends Conn {
                 . " VALUES ("
                 . " " . $idCabec
                 . " , " . $talhao->idTalhao
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao>dthrTalhao)
+                . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao)
                 . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
                 . " )";

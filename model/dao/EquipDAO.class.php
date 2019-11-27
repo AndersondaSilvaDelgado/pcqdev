@@ -48,9 +48,9 @@ class EquipDAO extends Conn {
                 . " FROM "
                 . " PCQ_EQUIP "
                 . " WHERE "
-                . " EQUIP_ID = " . $equip->idQuestaoItemAbord
+                . " EQUIP_ID = " . $equip->idEquip
                 . " AND "
-                . " DTHR_CEL = TO_DATE('" . $equip->dthrItemAbord . "','DD/MM/YYYY HH24:MI') "
+                . " DTHR_CEL = TO_DATE('" . $equip->dthrEquip . "','DD/MM/YYYY HH24:MI') "
                 . " AND "
                 . " CABEC_ID = " . $idCabec;
 
@@ -71,7 +71,7 @@ class EquipDAO extends Conn {
 
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
-        $sql = "INSERT INTO PST_ABORD_ITEM ("
+        $sql = "INSERT INTO PCQ_EQUIP ("
                 . " CABEC_ID "
                 . " , EQUIP_ID "
                 . " , TIPO "
