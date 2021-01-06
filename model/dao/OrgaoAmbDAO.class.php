@@ -22,7 +22,7 @@ class OrgaoAmbDAO extends Conn {
                 . " FROM "
                 . " PCQ_ORGAO_AMB "
                 . " WHERE "
-                . " ORGAOAMB_ID = " . $orgaoAmb->idOrgAmb
+                . " TIPO = " . $orgaoAmb->idOrgAmb
                 . " AND "
                 . " DTHR_CEL = TO_DATE('" . $orgaoAmb->dthrOrgAmb . "','DD/MM/YYYY HH24:MI') "
                 . " AND "
@@ -47,7 +47,7 @@ class OrgaoAmbDAO extends Conn {
 
         $sql = "INSERT INTO PCQ_ORGAO_AMB ("
                 . " CABEC_ID "
-                . " , ORGAOAMB_ID "
+                . " , TIPO "
                 . " , DTHR "
                 . " , DTHR_CEL "
                 . " , DTHR_TRANS "
