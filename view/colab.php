@@ -2,8 +2,8 @@
 
 $versao = filter_input(INPUT_GET, 'versao', FILTER_DEFAULT);
 
-require_once('../control/ColabCTR.class.php');
+require_once('../control/BaseDadosCTR.class.php');
 
-$colabCTR = new ColabCTR();
+$baseDadosCTR = new BaseDadosCTR();
 
-echo $colabCTR->dados($versao);
+echo $baseDadosCTR->dadosColab($versao);

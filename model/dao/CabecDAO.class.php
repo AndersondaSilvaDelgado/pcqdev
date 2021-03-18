@@ -15,7 +15,7 @@ require_once('../model/dao/AjusteDataHoraDAO.class.php');
 class CabecDAO extends Conn {
     //put your code here
     
-    public function verifCabec($cabec) {
+    public function verifCabec($cabec, $base) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
@@ -26,7 +26,7 @@ class CabecDAO extends Conn {
                 . " AND "
                 . " MATRIC_FUNC = " . $cabec->matricColabCabec . " ";
 
-        $this->Conn = parent::getConn();
+        $this->Conn = parent::getConn($base);
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -39,7 +39,7 @@ class CabecDAO extends Conn {
         return $v;
     }
 
-    public function idCabec($cabec) {
+    public function idCabec($cabec, $base) {
 
         $select = " SELECT "
                 . " ID AS ID "
@@ -50,7 +50,7 @@ class CabecDAO extends Conn {
                 . " AND "
                 . " MATRIC_FUNC = " . $cabec->matricColabCabec . " ";
 
-        $this->Conn = parent::getConn();
+        $this->Conn = parent::getConn($base);
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -63,7 +63,7 @@ class CabecDAO extends Conn {
         return $id;
     }
 
-    public function insCabec($cabec) {
+    public function insCabec($cabec, $base) {
 
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
@@ -109,6 +109,8 @@ class CabecDAO extends Conn {
                 . " , HA_INC_AREA_COMUM "
                 . " , QTDE_BRIGADISTA "
                 . " , EMPRESA_AUX "
+                . " , ORIGEM_FOGO "
+                . " , TIPO "
                 . " , COMENTARIO "
                 . " , DTHR "
                 . " , DTHR_CEL "
@@ -124,13 +126,15 @@ class CabecDAO extends Conn {
                 . " , " . $cabec->haIncAreaComumCabec
                 . " , " . $cabec->qtdeBrigadistaCabec
                 . " , " . $cabec->empresaTercCabec
+                . " , " . $cabec->origemFogoCabec
+                . " , " . $cabec->tipoCabec
                 . " , " . $cabec->comentCabec
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($cabec->dthrCabec)
+                . " , " . $ajusteDataHoraDAO->dataHoraGMT($cabec->dthrCabec, $base)
                 . " , TO_DATE('" . $cabec->dthrCabec. "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
                 . " )";
 
-        $this->Conn = parent::getConn();
+        $this->Conn = parent::getConn($base);
         $this->Create = $this->Conn->prepare($sql);
         $this->Create->execute();
     }

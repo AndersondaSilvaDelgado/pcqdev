@@ -2,8 +2,8 @@
 
 $versao = filter_input(INPUT_GET, 'versao', FILTER_DEFAULT);
 
-require_once('../control/QuestaoCTR.class.php');
+require_once('../control/BaseDadosCTR.class.php');
 
-$questaoCTR = new QuestaoCTR();
+$baseDadosCTR = new BaseDadosCTR();
 
-echo $questaoCTR->dados($versao);
+echo $baseDadosCTR->dadosQuestao($versao);

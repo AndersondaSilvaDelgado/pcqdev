@@ -15,7 +15,7 @@ require_once('../model/dao/AjusteDataHoraDAO.class.php');
 class OrgaoAmbDAO extends Conn {
     //put your code here
     
-    public function verifOrgaoAmb($idCabec, $orgaoAmb) {
+    public function verifOrgaoAmb($idCabec, $orgaoAmb, $base) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
@@ -28,7 +28,7 @@ class OrgaoAmbDAO extends Conn {
                 . " AND "
                 . " CABEC_ID = " . $idCabec;
 
-        $this->Conn = parent::getConn();
+        $this->Conn = parent::getConn($base);
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -41,7 +41,7 @@ class OrgaoAmbDAO extends Conn {
         return $v;
     }
 
-    public function insOrgaoAmb($idCabec, $orgaoAmb) {
+    public function insOrgaoAmb($idCabec, $orgaoAmb, $base) {
 
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
@@ -55,12 +55,12 @@ class OrgaoAmbDAO extends Conn {
                 . " VALUES ("
                 . " " . $idCabec
                 . " , " . $orgaoAmb->idOrgAmb
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($orgaoAmb->dthrOrgAmb)
+                . " , " . $ajusteDataHoraDAO->dataHoraGMT($orgaoAmb->dthrOrgAmb, $base)
                 . " , TO_DATE('" . $orgaoAmb->dthrOrgAmb . "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
                 . " )";
 
-        $this->Conn = parent::getConn();
+        $this->Conn = parent::getConn($base);
         $this->Create = $this->Conn->prepare($sql);
         $this->Create->execute();
     }

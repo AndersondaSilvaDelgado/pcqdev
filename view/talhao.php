@@ -2,8 +2,8 @@
 
 $versao = filter_input(INPUT_GET, 'versao', FILTER_DEFAULT);
 
-require_once('../control/TalhaoCTR.class.php');
+require_once('../control/BaseDadosCTR.class.php');
 
-$talhaoCTR = new TalhaoCTR();
+$baseDadosCTR = new BaseDadosCTR();
 
-echo $talhaoCTR->dados($versao);
+echo $baseDadosCTR->dadosTalhao($versao);

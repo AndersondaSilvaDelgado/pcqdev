@@ -14,7 +14,7 @@ require_once('../dbutil/Conn.class.php');
 class SecaoDAO extends Conn {
     //put your code here
     
-    public function dados() {
+    public function dados($base) {
 
         $select = "SELECT " 
                         . " PROPRAGR_ID AS \"idSecao\" "
@@ -26,7 +26,7 @@ class SecaoDAO extends Conn {
                         . " PROPRAGR_ID " 
                     . " ASC ";
         
-        $this->Conn = parent::getConn();
+        $this->Conn = parent::getConn($base);
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();

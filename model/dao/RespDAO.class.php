@@ -14,7 +14,7 @@ require_once('../dbutil/Conn.class.php');
 class RespDAO extends Conn  {
     //put your code here
     
-    public function dados() {
+    public function dados($base) {
 
         $select = "SELECT " 
                         . " ALQUEST_ID AS \"idResp\" "
@@ -28,7 +28,7 @@ class RespDAO extends Conn  {
                         . " SEQ "
                     . " ASC ";
         
-        $this->Conn = parent::getConn();
+        $this->Conn = parent::getConn($base);
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();

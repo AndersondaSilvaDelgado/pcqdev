@@ -7,7 +7,6 @@ require_once('../control/AtualAplicCTR.class.php');
 
 if (isset($info)):
 
-   echo 'CHEGOU AKI';
    $atualAplicCTR = new AtualAplicCTR();
    echo $atualAplicCTR->atualAplic($versao, $info);
 

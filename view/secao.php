@@ -2,8 +2,8 @@
 
 $versao = filter_input(INPUT_GET, 'versao', FILTER_DEFAULT);
 
-require_once('../control/SecaoCTR.class.php');
+require_once('../control/BaseDadosCTR.class.php');
 
-$secaoCTR = new SecaoCTR();
+$baseDadosCTR = new BaseDadosCTR();
 
-echo $secaoCTR->dados($versao);
+echo $baseDadosCTR->dadosSecao($versao);
