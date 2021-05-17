@@ -24,7 +24,7 @@ class CabecDAO extends Conn {
                 . " WHERE "
                 . " DTHR_CEL = TO_DATE('" . $cabec->dthrCabec . "','DD/MM/YYYY HH24:MI')"
                 . " AND "
-                . " MATRIC_FUNC = " . $cabec->matricColabCabec . " ";
+                . " FUNC_ID = " . $cabec->idFuncCabec . " ";
 
         $this->Conn = parent::getConn($base);
         $this->Read = $this->Conn->prepare($select);
@@ -48,7 +48,7 @@ class CabecDAO extends Conn {
                 . " WHERE "
                 . " DTHR_CEL = TO_DATE('" . $cabec->dthrCabec. "','DD/MM/YYYY HH24:MI')"
                 . " AND "
-                . " MATRIC_FUNC = " . $cabec->matricColabCabec . " ";
+                . " FUNC_ID = " . $cabec->idFuncCabec . " ";
 
         $this->Conn = parent::getConn($base);
         $this->Read = $this->Conn->prepare($select);
@@ -66,33 +66,17 @@ class CabecDAO extends Conn {
     public function insCabec($cabec, $base) {
 
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
-
-        if ($cabec->haIncCanaCabec == 0) {
-            $cabec->haIncCanaCabec = 'null';
-        }
-        
-        if ($cabec->haIncPalhadaCabec == 0) {
-            $cabec->haIncPalhadaCabec = 'null';
-        }
-        
-        if ($cabec->haIncResLegalCabec == 0) {
-            $cabec->haIncResLegalCabec = 'null';
-        }
         
         if ($cabec->haIncAppCabec == 0) {
             $cabec->haIncAppCabec = 'null';
         }
         
-        if ($cabec->haIncAreaComumCabec == 0) {
-            $cabec->haIncAreaComumCabec= 'null';
+        if ($cabec->haIncForaAppCabec == 0) {
+            $cabec->haIncForaAppCabec = 'null';
         }
         
-        if ($cabec->qtdeBrigadistaCabec == 0) {
-            $cabec->qtdeBrigadistaCabec = 'null';
-        }
-        
-        if ($cabec->empresaTercCabec != 'null') {
-            $cabec->empresaTercCabec = "'" . $cabec->empresaTercCabec . "'";
+        if ($cabec->tercCombCabec == 0) {
+            $cabec->tercCombCabec = 'null';
         }
         
         if ($cabec->comentCabec != 'null') {
@@ -100,43 +84,84 @@ class CabecDAO extends Conn {
         }
         
         $sql = "INSERT INTO PCQ_CABECALHO ("
-                . " MATRIC_FUNC "
+                . " FUNC_ID "
                 . " , PROPRAGR_ID "
-                . " , HA_INC_CANA "
-                . " , HA_INC_PALHADA "
-                . " , HA_INC_RES_LEGAL "
+                . " , TPAPONTFOG_ID "
                 . " , HA_INC_APP "
-                . " , HA_INC_AREA_COMUM "
-                . " , QTDE_BRIGADISTA "
-                . " , EMPRESA_AUX "
-                . " , ORIGEM_FOGO "
+                . " , HA_INC_FORA_APP "
+                . " , TERCOMBFOG_ID "
+                . " , ORIGEMFOG_ID "
+                . " , COND_ACEIRO_CANA "
+                . " , COND_ACEIRO_APP "
                 . " , TIPO "
                 . " , COMENTARIO "
                 . " , DTHR "
                 . " , DTHR_CEL "
                 . " , DTHR_TRANS "
+                . " , STATUS "
                 . " ) "
                 . " VALUES ("
-                . " " . $cabec->matricColabCabec
+                . " " . $cabec->idFuncCabec
                 . " , " . $cabec->secaoCabec
-                . " , " . $cabec->haIncCanaCabec
-                . " , " . $cabec->haIncPalhadaCabec
-                . " , " . $cabec->haIncResLegalCabec
+                . " , " . $cabec->tipoApontTrabCabec
                 . " , " . $cabec->haIncAppCabec
-                . " , " . $cabec->haIncAreaComumCabec
-                . " , " . $cabec->qtdeBrigadistaCabec
-                . " , " . $cabec->empresaTercCabec
+                . " , " . $cabec->haIncForaAppCabec
+                . " , " . $cabec->tercCombCabec
                 . " , " . $cabec->origemFogoCabec
+                . " , " . $cabec->aceiroCanavialCabec
+                . " , " . $cabec->aceiroVegetNativalCabec
                 . " , " . $cabec->tipoCabec
                 . " , " . $cabec->comentCabec
                 . " , " . $ajusteDataHoraDAO->dataHoraGMT($cabec->dthrCabec, $base)
                 . " , TO_DATE('" . $cabec->dthrCabec. "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
+                . " , 1 "
                 . " )";
 
         $this->Conn = parent::getConn($base);
         $this->Create = $this->Conn->prepare($sql);
         $this->Create->execute();
     }
+    
+    public function cabecReaj($base) {
+
+        $select = " SELECT "
+                . " ID AS \"idExtCabec\" "
+                . " , TO_CHAR(DTHR,'DD/MM/YYYY HH24:MI') AS \"dthrCabec\" "
+                . " , FUNC_ID AS \"idFuncCabec\" "
+                . " , TPAPONTFOG_ID AS \"tipoApontTrabCabec\" "
+                . " , ORIGEMFOG_ID AS \"origemFogoCabec\" "
+                . " , PROPRAGR_ID AS \"secaoCabec\""
+                . " , 4 AS \"statusCabec\""
+                . " FROM "
+                . " PCQ_CABECALHO "
+                . " WHERE"
+                . " STATUS = 2 "
+                . " ORDER BY ID DESC ";
+        
+        $this->Conn = parent::getConn($base);
+        $this->Read = $this->Conn->prepare($select);
+        $this->Read->setFetchMode(PDO::FETCH_ASSOC);
+        $this->Read->execute();
+        $result = $this->Read->fetchAll();
+
+        return $result;
+        
+    }
+    
+    public function updCabecCompl($idCabec, $base) {
+
+        $sql = " UPDATE PCQ_CABECALHO "
+                . " SET "
+                . " STATUS = 3 "
+                . " WHERE "
+                . " ID = " . $idCabec;
+        
+        $this->Conn = parent::getConn($base);
+        $this->Create = $this->Conn->prepare($sql);
+        $this->Create->execute();
+        
+    }
+    
     
 }

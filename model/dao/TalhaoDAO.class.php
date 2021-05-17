@@ -66,24 +66,114 @@ class TalhaoDAO extends Conn {
 
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
-        $sql = "INSERT INTO PCQ_TALHAO ("
-                . " CABEC_ID "
-                . " , TALHAO_ID   "
-                . " , DTHR "
-                . " , DTHR_CEL "
-                . " , DTHR_TRANS "
-                . " ) "
-                . " VALUES ("
-                . " " . $idCabec
-                . " , " . $talhao->idTalhao
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
-                . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
-                . " , SYSDATE "
-                . " )";
-
         $this->Conn = parent::getConn($base);
-        $this->Create = $this->Conn->prepare($sql);
-        $this->Create->execute();
+        
+        if($talhao->tipoTalhao === 1){
+            
+            $sql = "INSERT INTO PCQ_TALHAO ("
+                    . " CABEC_ID "
+                    . " , TALHAO_ID"
+                    . " , HA_INC"
+                    . " , ALT_CANA "
+                    . " , DTHR "
+                    . " , DTHR_CEL "
+                    . " , DTHR_TRANS"
+                    . " , TP_INC "
+                    . " ) "
+                    . " VALUES ("
+                    . " " . $idCabec
+                    . " , " . $talhao->idTalhao
+                    . " , " . $talhao->haIncCanaTalhao
+                    . " , " . $talhao->altCanaTalhao
+                    . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
+                    . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
+                    . " , SYSDATE "
+                    . " , 1 "
+                    . " )";
+    
+            $this->Create = $this->Conn->prepare($sql);
+            $this->Create->execute();
+            
+        }
+        else if($talhao->tipoTalhao === 2){
+            
+            $sql = "INSERT INTO PCQ_TALHAO ("
+                    . " CABEC_ID "
+                    . " , TALHAO_ID"
+                    . " , HA_INC"
+                    . " , ALT_CANA "
+                    . " , DTHR "
+                    . " , DTHR_CEL "
+                    . " , DTHR_TRANS"
+                    . " , TP_INC "
+                    . " ) "
+                    . " VALUES ("
+                    . " " . $idCabec
+                    . " , " . $talhao->idTalhao
+                    . " , " . $talhao->haIncPalhadaTalhao
+                    . " , NULL "
+                    . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
+                    . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
+                    . " , SYSDATE "
+                    . " , 2 "
+                    . " )";
+    
+            $this->Create = $this->Conn->prepare($sql);
+            $this->Create->execute();
+            
+        }
+        else{
+            
+            $sql = "INSERT INTO PCQ_TALHAO ("
+                    . " CABEC_ID "
+                    . " , TALHAO_ID"
+                    . " , HA_INC"
+                    . " , ALT_CANA "
+                    . " , DTHR "
+                    . " , DTHR_CEL "
+                    . " , DTHR_TRANS"
+                    . " , TP_INC "
+                    . " ) "
+                    . " VALUES ("
+                    . " " . $idCabec
+                    . " , " . $talhao->idTalhao
+                    . " , " . $talhao->haIncCanaTalhao
+                    . " , " . $talhao->altCanaTalhao
+                    . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
+                    . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
+                    . " , SYSDATE "
+                    . " , 1 "
+                    . " )";
+    
+            $this->Create = $this->Conn->prepare($sql);
+            $this->Create->execute();
+            
+            $sql = "INSERT INTO PCQ_TALHAO ("
+                    . " CABEC_ID "
+                    . " , TALHAO_ID"
+                    . " , HA_INC"
+                    . " , ALT_CANA "
+                    . " , DTHR "
+                    . " , DTHR_CEL "
+                    . " , DTHR_TRANS"
+                    . " , TP_INC "
+                    . " ) "
+                    . " VALUES ("
+                    . " " . $idCabec
+                    . " , " . $talhao->idTalhao
+                    . " , " . $talhao->haIncPalhadaTalhao
+                    . " , NULL "
+                    . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
+                    . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
+                    . " , SYSDATE "
+                    . " , 2 "
+                    . " )";
+    
+            $this->Create = $this->Conn->prepare($sql);
+            $this->Create->execute();
+            
+        }
+        
     }
     
 }

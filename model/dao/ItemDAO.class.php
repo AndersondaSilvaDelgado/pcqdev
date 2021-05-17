@@ -43,6 +43,10 @@ class ItemDAO extends Conn {
 
     public function insItem($idCabec, $item, $base) {
 
+        if ($item->idSubResp == 0) {
+            $item->idSubResp = 'null';
+        }
+        
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
         $sql = "INSERT INTO PCQ_ITEM ("

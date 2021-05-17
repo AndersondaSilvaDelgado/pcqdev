@@ -8,7 +8,7 @@ require_once('../control/FormularioCTR.class.php');
 if (isset($info)):
 
     $formularioCTR = new FormularioCTR();
-    $formularioCTR->salvarDados($versao, $info, "inserirdados");
-    echo "GRAVOU";
+    $formularioCTR->salvarCompleto($versao, $info, "inserirdados");
+    echo "GRAVOU-COMPLETO";
     
 endif;

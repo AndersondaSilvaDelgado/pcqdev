@@ -7,21 +7,24 @@
  */
 require_once('../dbutil/Conn.class.php');
 /**
- * Description of EquipDAO
+ * Description of BrigadistaDAO
  *
  * @author anderson
  */
-class EquipDAO extends Conn {
+class BrigadistaDAO extends Conn {
     //put your code here
-
+    
     public function dados($base) {
 
-        $select = "SELECT " 
-                    . " EQUIP_ID AS \"idEquip\" "
-                    . " , NRO_EQUIP AS \"nroEquip\" "
-                    . " , TP_EQUIP AS \"tipoEquip\" "
-                    . " FROM " 
-                    . " USINAS.V_EQUIP_COMBAT_FOGO ";
+        $select = " SELECT "
+                    . " FCF.FUNC_ID AS \"idFuncBrigadista\" "
+                    . " , FCF.CD AS \"matricBrigadista\" "
+                    . " , FCF.NOME AS \"nomeBrigadista\" "
+                . " FROM " 
+                    . " USINAS.V_FUNC_COMBAT_FOGO FCF "
+                . " ORDER BY " 
+                    . " FCF.CD "
+                . " ASC ";
         
         $this->Conn = parent::getConn($base);
         $this->Read = $this->Conn->prepare($select);
@@ -33,16 +36,16 @@ class EquipDAO extends Conn {
         
     }
     
-    public function verifEquip($idCabec, $equip, $base) {
+    public function verifBrigadista($idCabec, $brigad, $base) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
                 . " FROM "
-                . " PCQ_EQUIP "
+                . " PCQ_BRIGAD "
                 . " WHERE "
-                . " EQUIP_ID = " . $equip->idEquip
+                . " FUNC_ID = " . $brigad->idFunc
                 . " AND "
-                . " DTHR_CEL = TO_DATE('" . $equip->dthrEquip . "','DD/MM/YYYY HH24:MI') "
+                . " DTHR_CEL = TO_DATE('" . $brigad->dthrBrigadista . "','DD/MM/YYYY HH24:MI') "
                 . " AND "
                 . " CABEC_ID = " . $idCabec;
 
@@ -59,24 +62,22 @@ class EquipDAO extends Conn {
         return $v;
     }
 
-    public function insEquip($idCabec, $equip, $base) {
+    public function insBrigadista($idCabec, $brigad, $base) {
 
         $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
-        $sql = "INSERT INTO PCQ_EQUIP ("
+        $sql = "INSERT INTO PCQ_BRIGAD ("
                 . " CABEC_ID "
-                . " , EQUIP_ID "
-                . " , TIPO "
+                . " , FUNC_ID "
                 . " , DTHR "
                 . " , DTHR_CEL "
                 . " , DTHR_TRANS "
                 . " ) "
                 . " VALUES ("
                 . " " . $idCabec
-                . " , " . $equip->idEquip
-                . " , " . $equip->tipoEquip
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($equip->dthrEquip, $base)
-                . " , TO_DATE('" . $equip->dthrEquip . "','DD/MM/YYYY HH24:MI') "
+                . " , " . $brigad->idFunc
+                . " , " . $ajusteDataHoraDAO->dataHoraGMT($brigad->dthrBrigadista, $base)
+                . " , TO_DATE('" . $brigad->dthrBrigadista . "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
                 . " )";
 

@@ -7,8 +7,9 @@
  */
 require_once('../model/dao/CabecDAO.class.php');
 require_once('../model/dao/ItemDAO.class.php');
+require_once('../model/dao/BrigadistaDAO.class.php');
 require_once('../model/dao/EquipDAO.class.php');
-require_once('../model/dao/OrgaoAmbDAO.class.php');
+require_once('../model/dao/FotoDAO.class.php');
 require_once('../model/dao/TalhaoDAO.class.php');
 require_once('../model/dao/LogEnvioDAO.class.php');
 /**
@@ -21,15 +22,16 @@ class FormularioCTR {
     
     private $base = 2;
     
-    public function salvarDados($versao, $info, $pagina) {
+    public function salvarCompleto($versao, $info, $pagina) {
 
         $cabec = $info['cabec'];
         $item = $info['item'];
+        $brigadista = $info['brigadista'];
         $equip = $info['equip'];
-        $orgaoamb = $info['orgaoamb'];
+        $foto = $info['foto'];
         $talhao = $info['talhao'];
         
-        $dados = $cabec . $item . $equip . $orgaoamb . $talhao;
+        $dados = $cabec . $item . $equip . $talhao;
         
         $this->salvarLog($cabec, $dados, $pagina, $versao);
 
@@ -40,17 +42,43 @@ class FormularioCTR {
 
             $cabecJsonObj = json_decode($cabec);
             $itemJsonObj = json_decode($item);
+            $brigadistaJsonObj = json_decode($brigadista);
             $equipJsonObj = json_decode($equip);
-            $orgaoAmbJsonObj = json_decode($orgaoamb);
+            $fotoJsonObj = json_decode($foto);
             $talhaoJsonObj = json_decode($talhao);
 
             $cabecDados = $cabecJsonObj->cabec;
             $itemDados = $itemJsonObj->item;
+            $brigadistaDados = $brigadistaJsonObj->brigadista;
             $equipDados = $equipJsonObj->equip;
-            $orgaoAmbDados = $orgaoAmbJsonObj->orgaoamb;
+            $fotoDados = $fotoJsonObj->foto;
             $talhaoDados = $talhaoJsonObj->talhao;
 
-            return $this->salvarCabec($cabecDados, $itemDados, $equipDados, $orgaoAmbDados, $talhaoDados);
+            return $this->salvarCabec($cabecDados, $itemDados, $brigadistaDados, $equipDados, $fotoDados, $talhaoDados);
+        }
+    }
+    
+    public function salvarComplemento($versao, $info, $pagina) {
+
+        $cabec = $info['cabec'];
+        $item = $info['item'];
+        
+        $dados = $cabec . $item;
+        
+//        $this->salvarLog($cabec, $dados, $pagina, $versao);
+
+        $pagina = $pagina . '-' . $versao;
+        $versao = str_replace("_", ".", $versao);
+
+        if ($versao >= 1.00) {
+
+            $cabecJsonObj = json_decode($cabec);
+            $itemJsonObj = json_decode($item);
+
+            $cabecDados = $cabecJsonObj->cabec;
+            $itemDados = $itemJsonObj->item;
+
+            return $this->salvarCompl($cabecDados, $itemDados);
         }
     }
     
@@ -59,57 +87,87 @@ class FormularioCTR {
         $logEnvioDAO->salvarDados($cabec, $dados, $pagina, $versao, $this->base);
     }
     
-    private function salvarCabec($cabecDados, $itemDados, $equipDados, $orgaoAmbDados, $talhaoDados) {
-        $cabecDado = new CabecDAO();
+    private function salvarCabec($cabecDados, $itemDados, $brigadistaDados, $equipDados, $fotoDados, $talhaoDados) {
+        
+        $cabecDAO = new CabecDAO();
+        
         foreach ($cabecDados as $cabec) {
-            $v = $cabecDado->verifCabec($cabec, $this->base);
+            
+            $v = $cabecDAO->verifCabec($cabec, $this->base);
             if ($v == 0) {
-                $cabecDado->insCabec($cabec, $this->base);
+                $cabecDAO->insCabec($cabec, $this->base);
             }
-            $idCabecBD = $cabecDado->idCabec($cabec, $this->base);
+            $idCabecBD = $cabecDAO->idCabec($cabec, $this->base);
+            
+            $this->salvarItem($idCabecBD, $itemDados);
+            $this->salvarBrigadista($idCabecBD, $brigadistaDados);
+            $this->salvarEquip($idCabecBD, $equipDados);
+            $this->salvarFoto($idCabecBD, $fotoDados);
+            $this->salvarTalhao($idCabecBD, $talhaoDados);
+            
         }
-        $this->salvarItem($idCabecBD, $itemDados);
-        $this->salvarEquip($idCabecBD, $equipDados);
-        $this->salvarOrgaoAmb($idCabecBD, $orgaoAmbDados);
-        $this->salvarTalhao($idCabecBD, $talhaoDados);
+
     }
     
-    private function salvarItem($idBolBD, $itemDados) {
+    private function salvarCompl($cabecDados, $itemDados) {
+        
+        $cabecDAO = new CabecDAO();
+        foreach ($cabecDados as $cabec) {
+            
+            $idCabecBD = $cabec->idExtCabec;
+            $cabecDAO->updCabecCompl($idCabecBD, $this->base);
+            $this->salvarItem($idCabecBD, $itemDados);
+            
+        }
+        
+    }
+    
+    private function salvarItem($idCabecBD, $itemDados) {
         $itemDAO = new ItemDAO();
         foreach ($itemDados as $item) {
-            $v = $itemDAO->verifItem($idBolBD, $item, $this->base);
+            $v = $itemDAO->verifItem($idCabecBD, $item, $this->base);
             if ($v == 0) {
-                $itemDAO->insItem($idBolBD, $item, $this->base);
+                $itemDAO->insItem($idCabecBD, $item, $this->base);
             }
         }
     }
 
-    private function salvarEquip($idBolBD, $equipDados) {
+    private function salvarBrigadista($idCabecBD, $brigadistaDados) {
+        $brigadistaDAO = new BrigadistaDAO();
+        foreach ($brigadistaDados as $brigadista) {
+            $v = $brigadistaDAO->verifBrigadista($idCabecBD, $brigadista, $this->base);
+            if ($v == 0) {
+                $brigadistaDAO->insBrigadista($idCabecBD, $brigadista, $this->base);
+            }
+        }
+    }
+    
+    private function salvarEquip($idCabecBD, $equipDados) {
         $equipDAO = new EquipDAO();
         foreach ($equipDados as $equip) {
-            $v = $equipDAO->verifEquip($idBolBD, $equip, $this->base);
+            $v = $equipDAO->verifEquip($idCabecBD, $equip, $this->base);
             if ($v == 0) {
-                $equipDAO->insEquip($idBolBD, $equip, $this->base);
+                $equipDAO->insEquip($idCabecBD, $equip, $this->base);
+            }
+        }
+    }
+
+    private function salvarFoto($idCabecBD, $fotoDados) {
+        $fotoDAO = new FotoDAO();
+        foreach ($fotoDados as $foto) {
+            $v = $fotoDAO->verifFoto($idCabecBD, $foto, $this->base);
+            if ($v == 0) {
+                $fotoDAO->insFoto($idCabecBD, $foto, $this->base);
             }
         }
     }
     
-    private function salvarOrgaoAmb($idBolBD, $orgaoAmbDados) {
-        $orgaoAmbDAO = new OrgaoAmbDAO();
-        foreach ($orgaoAmbDados as $orgaoAmb) {
-            $v = $orgaoAmbDAO->verifOrgaoAmb($idBolBD, $orgaoAmb, $this->base);
-            if ($v == 0) {
-                $orgaoAmbDAO->insOrgaoAmb($idBolBD, $orgaoAmb, $this->base);
-            }
-        }
-    }
-    
-    private function salvarTalhao($idBolBD, $talhaoDados) {
+    private function salvarTalhao($idCabecBD, $talhaoDados) {
         $talhaoDAO = new TalhaoDAO();
         foreach ($talhaoDados as $talhao) {
-            $v = $talhaoDAO->verifTalhao($idBolBD, $talhao, $this->base);
+            $v = $talhaoDAO->verifTalhao($idCabecBD, $talhao, $this->base);
             if ($v == 0) {
-                $talhaoDAO->insTalhao($idBolBD, $talhao, $this->base);
+                $talhaoDAO->insTalhao($idCabecBD, $talhao, $this->base);
             }
         }
     }
