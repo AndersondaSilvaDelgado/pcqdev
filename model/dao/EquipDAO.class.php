@@ -14,7 +14,7 @@ require_once('../dbutil/Conn.class.php');
 class EquipDAO extends Conn {
     //put your code here
 
-    public function dados($base) {
+    public function dados() {
 
         $select = "SELECT " 
                     . " EQUIP_ID AS \"idEquip\" "
@@ -23,7 +23,7 @@ class EquipDAO extends Conn {
                     . " FROM " 
                     . " USINAS.V_EQUIP_COMBAT_FOGO ";
         
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -33,7 +33,7 @@ class EquipDAO extends Conn {
         
     }
     
-    public function verifEquip($idCabec, $equip, $base) {
+    public function verifEquip($idCabec, $equip) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
@@ -46,7 +46,7 @@ class EquipDAO extends Conn {
                 . " AND "
                 . " CABEC_ID = " . $idCabec;
 
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -59,9 +59,7 @@ class EquipDAO extends Conn {
         return $v;
     }
 
-    public function insEquip($idCabec, $equip, $base) {
-
-        $ajusteDataHoraDAO = new AjusteDataHoraDAO();
+    public function insEquip($idCabec, $equip) {
 
         $sql = "INSERT INTO PCQ_EQUIP ("
                 . " CABEC_ID "
@@ -75,12 +73,12 @@ class EquipDAO extends Conn {
                 . " " . $idCabec
                 . " , " . $equip->idEquip
                 . " , " . $equip->tipoEquip
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($equip->dthrEquip, $base)
+                . " , TO_DATE('" . $equip->dthrEquip . "','DD/MM/YYYY HH24:MI') "
                 . " , TO_DATE('" . $equip->dthrEquip . "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
                 . " )";
 
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Create = $this->Conn->prepare($sql);
         $this->Create->execute();
     }

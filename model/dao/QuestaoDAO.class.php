@@ -14,21 +14,21 @@ require_once('../dbutil/Conn.class.php');
 class QuestaoDAO extends Conn {
     //put your code here
     
-    public function dados($base) {
+    public function dados() {
 
         $select = "SELECT " 
                         . " ITQUEST_ID AS \"idQuestao\" "
                         . " , SEQ AS \"seqQuestao\" "
                         . " , DESCR AS \"descrQuestao\" "
                     . " FROM " 
-                        . " VMB_QUEST_QUEIMADA"
+                        . " USINAS.VMB_QUEST_QUEIMADA"
                     . " WHERE "
                         . " SUB_PERG = 0 "
                     . " ORDER BY "
                         . " SEQ "
                     . " ASC ";
         
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();

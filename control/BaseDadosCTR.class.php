@@ -22,195 +22,126 @@ require_once('../model/dao/TipoApontDAO.class.php');
  * @author anderson
  */
 class BaseDadosCTR {
-    //put your code here
     
-    private $base = 2;
-    
-    public function dadosBrigadista($versao) {
+    public function dadosBrigadista() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $brigadistaDAO = new BrigadistaDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $brigadistaDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
-            
-        }
-        
+        $dados = array("dados" => $brigadistaDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
+
     }
     
-    public function dadosCabecReaj($versao) {
+    public function dadosCabecReaj() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $cabecDAO = new CabecDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $cabecDAO->cabecReaj($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $cabecDAO->cabecReaj());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-    public function dadosColab($versao) {
+    public function dadosColab() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $colabDAO = new ColabDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $colabDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $colabDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-    public function dadosEquip($versao) {
+    public function dadosEquip() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $equipDAO = new EquipDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $equipDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $equipDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-    public function dadosQuestao($versao) {
+    public function dadosQuestao() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $questaoDAO = new QuestaoDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $questaoDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $questaoDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-    public function dadosOrigemFogo($versao) {
+    public function dadosOrigemFogo() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $origemFogoDAO = new OrigemFogoDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $origemFogoDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $origemFogoDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-    public function dadosResp($versao) {
+    public function dadosResp() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $respDAO = new RespDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $respDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $respDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-    public function dadosSecao($versao) {
+    public function dadosSecao() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $secaoDAO = new SecaoDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $secaoDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $secaoDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-    public function dadosTalhao($versao) {
+    public function dadosTalhao() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $talhaoDAO = new TalhaoDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $talhaoDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $talhaoDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-    public function dadosTercComb($versao) {
+    public function dadosTercComb() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $tercCombDAO = new TercCombDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $tercCombDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $tercCombDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
-        public function dadosTipoApont($versao) {
+    public function dadosTipoApont() {
 
-        $versao = str_replace("_", ".", $versao);
-        
         $tipoApontDAO = new TipoApontDAO();
-        
-        if($versao >= 1.00){
-        
-            $dados = array("dados" => $tipoApontDAO->dados($this->base));
-            $json_str = json_encode($dados);
 
-            return $json_str;
+        $dados = array("dados" => $tipoApontDAO->dados());
+        $json_str = json_encode($dados);
+
+        return $json_str;
             
-        }
-        
     }
     
 }

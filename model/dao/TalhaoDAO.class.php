@@ -14,7 +14,7 @@ require_once('../dbutil/Conn.class.php');
 class TalhaoDAO extends Conn {
     //put your code here
 
-    public function dados($base) {
+    public function dados() {
 
         $select = " SELECT "
                     . " TALHAO_ID AS \"idTalhao\" "
@@ -26,7 +26,7 @@ class TalhaoDAO extends Conn {
                     . " TALHAO_ID "
                 . " ASC ";
         
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -36,7 +36,7 @@ class TalhaoDAO extends Conn {
         
     }
     
-    public function verifTalhao($idCabec, $talhao, $base) {
+    public function verifTalhao($idCabec, $talhao) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
@@ -49,7 +49,7 @@ class TalhaoDAO extends Conn {
                 . " AND "
                 . " CABEC_ID = " . $idCabec;
 
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -62,11 +62,9 @@ class TalhaoDAO extends Conn {
         return $v;
     }
 
-    public function insTalhao($idCabec, $talhao, $base) {
+    public function insTalhao($idCabec, $talhao) {
 
-        $ajusteDataHoraDAO = new AjusteDataHoraDAO();
-
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         
         if($talhao->tipoTalhao === 1){
             
@@ -85,7 +83,7 @@ class TalhaoDAO extends Conn {
                     . " , " . $talhao->idTalhao
                     . " , " . $talhao->haIncCanaTalhao
                     . " , " . $talhao->altCanaTalhao
-                    . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
+                    . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                     . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                     . " , SYSDATE "
                     . " , 1 "
@@ -112,7 +110,7 @@ class TalhaoDAO extends Conn {
                     . " , " . $talhao->idTalhao
                     . " , " . $talhao->haIncPalhadaTalhao
                     . " , NULL "
-                    . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
+                    . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                     . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                     . " , SYSDATE "
                     . " , 2 "
@@ -139,7 +137,7 @@ class TalhaoDAO extends Conn {
                     . " , " . $talhao->idTalhao
                     . " , " . $talhao->haIncCanaTalhao
                     . " , " . $talhao->altCanaTalhao
-                    . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
+                    . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                     . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                     . " , SYSDATE "
                     . " , 1 "
@@ -163,7 +161,7 @@ class TalhaoDAO extends Conn {
                     . " , " . $talhao->idTalhao
                     . " , " . $talhao->haIncPalhadaTalhao
                     . " , NULL "
-                    . " , " . $ajusteDataHoraDAO->dataHoraGMT($talhao->dthrTalhao, $base)
+                    . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                     . " , TO_DATE('" . $talhao->dthrTalhao . "','DD/MM/YYYY HH24:MI') "
                     . " , SYSDATE "
                     . " , 2 "

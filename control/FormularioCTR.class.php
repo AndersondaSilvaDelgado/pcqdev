@@ -11,80 +11,52 @@ require_once('../model/dao/BrigadistaDAO.class.php');
 require_once('../model/dao/EquipDAO.class.php');
 require_once('../model/dao/FotoDAO.class.php');
 require_once('../model/dao/TalhaoDAO.class.php');
-require_once('../model/dao/LogEnvioDAO.class.php');
 /**
  * Description of Formulario
  *
  * @author anderson
  */
 class FormularioCTR {
-    //put your code here
     
-    private $base = 2;
-    
-    public function salvarCompleto($versao, $info, $pagina) {
+    public function salvarCompleto($info) {
 
-        $cabec = $info['cabec'];
-        $item = $info['item'];
-        $brigadista = $info['brigadista'];
-        $equip = $info['equip'];
-        $foto = $info['foto'];
-        $talhao = $info['talhao'];
-        
-        $dados = $cabec . $item . $equip . $talhao;
-        
-        $this->salvarLog($cabec, $dados, $pagina, $versao);
+        $dados = $info['dado'];
+//        echo 'Dados = ' . $dados;
+        $array = explode("_", $dados);
 
-        $pagina = $pagina . '-' . $versao;
-        $versao = str_replace("_", ".", $versao);
+//        $cabec = mb_convert_encoding($cabec, "UTF-8", "ISO-8859-1");
+//
+        $cabecJsonObj = json_decode($array[0]);
+        $itemJsonObj = json_decode($array[1]);
+        $brigadistaJsonObj = json_decode($array[2]);
+        $equipJsonObj = json_decode($array[3]);
+        $fotoJsonObj = json_decode($array[4]);
+        $talhaoJsonObj = json_decode($array[5]);
 
-        if ($versao >= 1.00) {
+        $cabecDados = $cabecJsonObj->cabec;
+        $itemDados = $itemJsonObj->item;
+        $brigadistaDados = $brigadistaJsonObj->brigadista;
+        $equipDados = $equipJsonObj->equip;
+        $fotoDados = $fotoJsonObj->foto;
+        $talhaoDados = $talhaoJsonObj->talhao;
 
-            $cabecJsonObj = json_decode($cabec);
-            $itemJsonObj = json_decode($item);
-            $brigadistaJsonObj = json_decode($brigadista);
-            $equipJsonObj = json_decode($equip);
-            $fotoJsonObj = json_decode($foto);
-            $talhaoJsonObj = json_decode($talhao);
+        return $this->salvarCabec($cabecDados, $itemDados, $brigadistaDados, $equipDados, $fotoDados, $talhaoDados);
 
-            $cabecDados = $cabecJsonObj->cabec;
-            $itemDados = $itemJsonObj->item;
-            $brigadistaDados = $brigadistaJsonObj->brigadista;
-            $equipDados = $equipJsonObj->equip;
-            $fotoDados = $fotoJsonObj->foto;
-            $talhaoDados = $talhaoJsonObj->talhao;
-
-            return $this->salvarCabec($cabecDados, $itemDados, $brigadistaDados, $equipDados, $fotoDados, $talhaoDados);
-        }
     }
     
-    public function salvarComplemento($versao, $info, $pagina) {
+    public function salvarComplemento($info) {
 
-        $cabec = $info['cabec'];
-        $item = $info['item'];
+        $dados = $info['dado'];
+        $array = explode("_",$dados);
+
+        $cabecJsonObj = json_decode($array[0]);
+        $itemJsonObj = json_decode($array[1]);
+
+        $cabecDados = $cabecJsonObj->cabec;
+        $itemDados = $itemJsonObj->item;
+
+        return $this->salvarCompl($cabecDados, $itemDados);
         
-        $dados = $cabec . $item;
-        
-//        $this->salvarLog($cabec, $dados, $pagina, $versao);
-
-        $pagina = $pagina . '-' . $versao;
-        $versao = str_replace("_", ".", $versao);
-
-        if ($versao >= 1.00) {
-
-            $cabecJsonObj = json_decode($cabec);
-            $itemJsonObj = json_decode($item);
-
-            $cabecDados = $cabecJsonObj->cabec;
-            $itemDados = $itemJsonObj->item;
-
-            return $this->salvarCompl($cabecDados, $itemDados);
-        }
-    }
-    
-    private function salvarLog($cabec, $dados, $pagina, $versao) {
-        $logEnvioDAO = new LogEnvioDAO();
-        $logEnvioDAO->salvarDados($cabec, $dados, $pagina, $versao, $this->base);
     }
     
     private function salvarCabec($cabecDados, $itemDados, $brigadistaDados, $equipDados, $fotoDados, $talhaoDados) {
@@ -93,11 +65,11 @@ class FormularioCTR {
         
         foreach ($cabecDados as $cabec) {
             
-            $v = $cabecDAO->verifCabec($cabec, $this->base);
+            $v = $cabecDAO->verifCabec($cabec);
             if ($v == 0) {
-                $cabecDAO->insCabec($cabec, $this->base);
+                $cabecDAO->insCabec($cabec);
             }
-            $idCabecBD = $cabecDAO->idCabec($cabec, $this->base);
+            $idCabecBD = $cabecDAO->idCabec($cabec);
             
             $this->salvarItem($idCabecBD, $itemDados);
             $this->salvarBrigadista($idCabecBD, $brigadistaDados);
@@ -115,7 +87,7 @@ class FormularioCTR {
         foreach ($cabecDados as $cabec) {
             
             $idCabecBD = $cabec->idExtCabec;
-            $cabecDAO->updCabecCompl($idCabecBD, $this->base);
+            $cabecDAO->updCabecCompl($idCabecBD);
             $this->salvarItem($idCabecBD, $itemDados);
             
         }
@@ -125,9 +97,9 @@ class FormularioCTR {
     private function salvarItem($idCabecBD, $itemDados) {
         $itemDAO = new ItemDAO();
         foreach ($itemDados as $item) {
-            $v = $itemDAO->verifItem($idCabecBD, $item, $this->base);
+            $v = $itemDAO->verifItem($idCabecBD, $item);
             if ($v == 0) {
-                $itemDAO->insItem($idCabecBD, $item, $this->base);
+                $itemDAO->insItem($idCabecBD, $item);
             }
         }
     }
@@ -135,9 +107,9 @@ class FormularioCTR {
     private function salvarBrigadista($idCabecBD, $brigadistaDados) {
         $brigadistaDAO = new BrigadistaDAO();
         foreach ($brigadistaDados as $brigadista) {
-            $v = $brigadistaDAO->verifBrigadista($idCabecBD, $brigadista, $this->base);
+            $v = $brigadistaDAO->verifBrigadista($idCabecBD, $brigadista);
             if ($v == 0) {
-                $brigadistaDAO->insBrigadista($idCabecBD, $brigadista, $this->base);
+                $brigadistaDAO->insBrigadista($idCabecBD, $brigadista);
             }
         }
     }
@@ -145,9 +117,9 @@ class FormularioCTR {
     private function salvarEquip($idCabecBD, $equipDados) {
         $equipDAO = new EquipDAO();
         foreach ($equipDados as $equip) {
-            $v = $equipDAO->verifEquip($idCabecBD, $equip, $this->base);
+            $v = $equipDAO->verifEquip($idCabecBD, $equip);
             if ($v == 0) {
-                $equipDAO->insEquip($idCabecBD, $equip, $this->base);
+                $equipDAO->insEquip($idCabecBD, $equip);
             }
         }
     }
@@ -155,9 +127,9 @@ class FormularioCTR {
     private function salvarFoto($idCabecBD, $fotoDados) {
         $fotoDAO = new FotoDAO();
         foreach ($fotoDados as $foto) {
-            $v = $fotoDAO->verifFoto($idCabecBD, $foto, $this->base);
+            $v = $fotoDAO->verifFoto($idCabecBD, $foto);
             if ($v == 0) {
-                $fotoDAO->insFoto($idCabecBD, $foto, $this->base);
+                $fotoDAO->insFoto($idCabecBD, $foto);
             }
         }
     }
@@ -165,9 +137,9 @@ class FormularioCTR {
     private function salvarTalhao($idCabecBD, $talhaoDados) {
         $talhaoDAO = new TalhaoDAO();
         foreach ($talhaoDados as $talhao) {
-            $v = $talhaoDAO->verifTalhao($idCabecBD, $talhao, $this->base);
+            $v = $talhaoDAO->verifTalhao($idCabecBD, $talhao);
             if ($v == 0) {
-                $talhaoDAO->insTalhao($idCabecBD, $talhao, $this->base);
+                $talhaoDAO->insTalhao($idCabecBD, $talhao);
             }
         }
     }

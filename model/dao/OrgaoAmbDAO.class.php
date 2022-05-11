@@ -7,23 +7,23 @@
  */
 require_once('../dbutil/Conn.class.php');
 /**
- * Description of Item
+ * Description of OrgaoAmb
  *
  * @author anderson
  */
-class ItemDAO extends Conn {
+class OrgaoAmbDAO extends Conn {
     //put your code here
     
-    public function verifItem($idCabec, $item) {
+    public function verifOrgaoAmb($idCabec, $orgaoAmb) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
                 . " FROM "
-                . " PCQ_ITEM "
+                . " PCQ_ORGAO_AMB "
                 . " WHERE "
-                . " ITQUEST_ID = " . $item->idQuestao
+                . " TIPO = " . $orgaoAmb->idOrgAmb
                 . " AND "
-                . " DTHR_CEL = TO_DATE('" . $item->dthrItem . "','DD/MM/YYYY HH24:MI') "
+                . " DTHR_CEL = TO_DATE('" . $orgaoAmb->dthrOrgAmb . "','DD/MM/YYYY HH24:MI') "
                 . " AND "
                 . " CABEC_ID = " . $idCabec;
 
@@ -40,28 +40,20 @@ class ItemDAO extends Conn {
         return $v;
     }
 
-    public function insItem($idCabec, $item) {
+    public function insOrgaoAmb($idCabec, $orgaoAmb) {
 
-        if ($item->idSubResp == 0) {
-            $item->idSubResp = 'null';
-        }
-        
-        $sql = "INSERT INTO PCQ_ITEM ("
+        $sql = "INSERT INTO PCQ_ORGAO_AMB ("
                 . " CABEC_ID "
-                . " , ITQUEST_ID "
-                . " , ALQUEST_ID "
-                . " , ALQUEST_SUB_ID "
+                . " , TIPO "
                 . " , DTHR "
                 . " , DTHR_CEL "
                 . " , DTHR_TRANS "
                 . " ) "
                 . " VALUES ("
                 . " " . $idCabec
-                . " , " . $item->idQuestao
-                . " , " . $item->idResp
-                . " , " . $item->idSubResp
-                . " , TO_DATE('" . $item->dthrItem . "','DD/MM/YYYY HH24:MI') "
-                . " , TO_DATE('" . $item->dthrItem . "','DD/MM/YYYY HH24:MI') "
+                . " , " . $orgaoAmb->idOrgAmb
+                . " , TO_DATE('" . $orgaoAmb->dthrOrgAmb . "','DD/MM/YYYY HH24:MI') "
+                . " , TO_DATE('" . $orgaoAmb->dthrOrgAmb . "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
                 . " )";
 

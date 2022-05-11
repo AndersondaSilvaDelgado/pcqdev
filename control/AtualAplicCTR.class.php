@@ -12,65 +12,54 @@ require_once('../model/dao/AtualAplicDAO.class.php');
  * @author anderson
  */
 class AtualAplicCTR {
-    //put your code here
     
-    private $base = 2;
-    
-    public function atualAplic($versao, $info) {
+    public function atualAplic($info) {
 
-        $versao = str_replace("_", ".", $versao);
-        
-        $retorno = '';
-        
-        if($versao >= 1.00){
-        
-            $atualAplicDAO = new AtualAplicDAO();
+        $atualAplicDAO = new AtualAplicDAO();
 
-            $jsonObj = json_decode($info['dado']);
-            $dados = $jsonObj->dados;
+        $jsonObj = json_decode($info['dado']);
+        $dados = $jsonObj->dados;
 
-            foreach ($dados as $d) {
-                $aparelho = $d->nroAparelhoAtual;
-                $versaoAtual = $d->versaoAtual;
+        foreach ($dados as $d) {
+            $aparelho = $d->nroAparelhoAtual;
+            $versaoAtual = $d->versaoAtual;
+        }
+
+        $retAtualApp = 0;
+        $retFlagLogEnvio = 0;
+        $retFlagLogErro = 0;
+
+        $verif = $atualAplicDAO->verAtual($aparelho);
+        if ($verif == 0) {
+            $atualAplicDAO->insAtual($aparelho, $versaoAtual);
+        } else {
+            $result = $atualAplicDAO->retAtual($aparelho);
+            foreach ($result as $item) {
+                $versaoNovo = $item['VERSAO_NOVA'];
+                $versaoAtualBD = $item['VERSAO_ATUAL'];
+                $retFlagLogEnvio = $item['FLAG_LOG_ENVIO'];
+                $retFlagLogErro = $item['FLAG_LOG_ERRO'];
             }
-            
-            $retAtualApp = 0;
-            $retFlagLogEnvio = 0;
-            $retFlagLogErro = 0;
-            
-            $verif = $atualAplicDAO->verAtual($aparelho, $this->base);
-            if ($verif == 0) {
-                $atualAplicDAO->insAtual($aparelho, $versaoAtual, $this->base);
+            if ($versaoAtual != $versaoAtualBD) {
+                $atualAplicDAO->updAtualNova($aparelho, $versaoAtual);
             } else {
-                $result = $atualAplicDAO->retAtual($aparelho, $this->base);
-                foreach ($result as $item) {
-                    $versaoNovo = $item['VERSAO_NOVA'];
-                    $versaoAtualBD = $item['VERSAO_ATUAL'];
-                    $retFlagLogEnvio = $item['FLAG_LOG_ENVIO'];
-                    $retFlagLogErro = $item['FLAG_LOG_ERRO'];
-                }
-                if ($versaoAtual != $versaoAtualBD) {
-                    $atualAplicDAO->updAtualNova($aparelho, $versaoAtual, $this->base);
+                if ($versaoAtual != $versaoNovo) {
+                    $retAtualApp = 1;
                 } else {
-                    if ($versaoAtual != $versaoNovo) {
-                        $retAtualApp = 1;
-                    } else {
-                        if (strcmp($versaoAtual, $versaoAtualBD) <> 0) {
-                            $atualAplicDAO->updAtual($aparelho, $versaoAtual, $this->base);
-                        }
+                    if (strcmp($versaoAtual, $versaoAtualBD) <> 0) {
+                        $atualAplicDAO->updAtual($aparelho, $versaoAtual);
                     }
                 }
             }
-            $dthr = $atualAplicDAO->dataHora($this->base);
-            
-            $dado = array("flagAtualApp" => $retAtualApp
-                , "flagLogEnvio" => $retFlagLogEnvio, "flagLogErro" => $retFlagLogErro
-                , "dthr" => $dthr);
-
-            $retorno = json_encode(array("dados" => array($dado)));
-        
         }
-        
+        $dthr = $atualAplicDAO->dataHora();
+
+        $dado = array("flagAtualApp" => $retAtualApp
+            , "flagLogEnvio" => $retFlagLogEnvio, "flagLogErro" => $retFlagLogErro
+            , "dthr" => $dthr);
+
+        $retorno = json_encode(array("dados" => array($dado)));
+
         return $retorno; 
         
     }

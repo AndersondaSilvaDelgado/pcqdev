@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 require_once('../dbutil/OCI.class.php');
-require_once('../model/dao/AjusteDataHoraDAO.class.php');
 /**
  * Description of FotoDAO
  *
@@ -15,7 +14,7 @@ require_once('../model/dao/AjusteDataHoraDAO.class.php');
 class FotoDAO extends OCI {
     //put your code here
     
-    public function verifFoto($idCabec, $foto, $base) {
+    public function verifFoto($idCabec, $foto) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
@@ -28,7 +27,7 @@ class FotoDAO extends OCI {
                 . " AND "
                 . " CABEC_ID = " . $idCabec;
 
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $stid = oci_parse($this->Conn, $select);
         oci_execute($stid);
 
@@ -41,9 +40,8 @@ class FotoDAO extends OCI {
         return $v;
     }
 
-    public function insFoto($idCabec, $foto, $base) {
+    public function insFoto($idCabec, $foto) {
 
-        $ajusteDataHoraDAO = new AjusteDataHoraDAO();
 
         $sql = "INSERT INTO PCQ_FOTO ("
                 . " CABEC_ID "
@@ -58,13 +56,13 @@ class FotoDAO extends OCI {
                 . " " . $idCabec
                 . " , empty_blob() "
                 . " , 'FOTO_" . $foto->idFotoItem . "'"
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($foto->dthrFoto, $base)
+                . " , TO_DATE('" . $foto->dthrFoto . "','DD/MM/YYYY HH24:MI') "
                 . " , TO_DATE('" . $foto->dthrFoto . "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE"
                 . " , " . $foto->tipoFoto
                 . " ) RETURNING image INTO :image";
 
-        $this->OCI = parent::getConn($base);
+        $this->OCI = parent::getConn();
         
         $result = oci_parse($this->OCI, $sql);
         $blob = oci_new_descriptor($this->OCI, OCI_D_LOB);

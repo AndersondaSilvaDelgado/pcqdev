@@ -14,7 +14,7 @@ require_once('../dbutil/Conn.class.php');
 class BrigadistaDAO extends Conn {
     //put your code here
     
-    public function dados($base) {
+    public function dados() {
 
         $select = " SELECT "
                     . " FCF.FUNC_ID AS \"idFuncBrigadista\" "
@@ -26,7 +26,7 @@ class BrigadistaDAO extends Conn {
                     . " FCF.CD "
                 . " ASC ";
         
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -36,7 +36,7 @@ class BrigadistaDAO extends Conn {
         
     }
     
-    public function verifBrigadista($idCabec, $brigad, $base) {
+    public function verifBrigadista($idCabec, $brigad) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
@@ -49,7 +49,7 @@ class BrigadistaDAO extends Conn {
                 . " AND "
                 . " CABEC_ID = " . $idCabec;
 
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -62,9 +62,7 @@ class BrigadistaDAO extends Conn {
         return $v;
     }
 
-    public function insBrigadista($idCabec, $brigad, $base) {
-
-        $ajusteDataHoraDAO = new AjusteDataHoraDAO();
+    public function insBrigadista($idCabec, $brigad) {
 
         $sql = "INSERT INTO PCQ_BRIGAD ("
                 . " CABEC_ID "
@@ -76,7 +74,7 @@ class BrigadistaDAO extends Conn {
                 . " VALUES ("
                 . " " . $idCabec
                 . " , " . $brigad->idFunc
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($brigad->dthrBrigadista, $base)
+                . " , TO_DATE('" . $brigad->dthrBrigadista . "','DD/MM/YYYY HH24:MI') "
                 . " , TO_DATE('" . $brigad->dthrBrigadista . "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
                 . " )";

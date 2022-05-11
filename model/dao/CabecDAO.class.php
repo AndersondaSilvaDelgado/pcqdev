@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 require_once('../dbutil/Conn.class.php');
-require_once('../model/dao/AjusteDataHoraDAO.class.php');
 /**
  * Description of Cabec
  *
@@ -15,7 +14,7 @@ require_once('../model/dao/AjusteDataHoraDAO.class.php');
 class CabecDAO extends Conn {
     //put your code here
     
-    public function verifCabec($cabec, $base) {
+    public function verifCabec($cabec) {
 
         $select = " SELECT "
                 . " COUNT(*) AS QTDE "
@@ -26,7 +25,7 @@ class CabecDAO extends Conn {
                 . " AND "
                 . " FUNC_ID = " . $cabec->idFuncCabec . " ";
 
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -39,7 +38,7 @@ class CabecDAO extends Conn {
         return $v;
     }
 
-    public function idCabec($cabec, $base) {
+    public function idCabec($cabec) {
 
         $select = " SELECT "
                 . " ID AS ID "
@@ -50,7 +49,7 @@ class CabecDAO extends Conn {
                 . " AND "
                 . " FUNC_ID = " . $cabec->idFuncCabec . " ";
 
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -63,10 +62,8 @@ class CabecDAO extends Conn {
         return $id;
     }
 
-    public function insCabec($cabec, $base) {
+    public function insCabec($cabec) {
 
-        $ajusteDataHoraDAO = new AjusteDataHoraDAO();
-        
         if ($cabec->haIncAppCabec == 0) {
             $cabec->haIncAppCabec = 'null';
         }
@@ -80,7 +77,7 @@ class CabecDAO extends Conn {
         }
         
         if ($cabec->comentCabec != 'null') {
-            $cabec->comentCabec = "'" . $cabec->comentCabec . "'";
+            $cabec->comentCabec = "'" . str_replace(array("#", "'", ";", "*", "%", "$", "@", "!", "{", "}", "[", "]", "(", ")"), '', $cabec->comentCabec) . "'";
         }
         
         $sql = "INSERT INTO PCQ_CABECALHO ("
@@ -95,6 +92,7 @@ class CabecDAO extends Conn {
                 . " , COND_ACEIRO_APP "
                 . " , TIPO "
                 . " , COMENTARIO "
+                . " , DATA_INS "
                 . " , DTHR "
                 . " , DTHR_CEL "
                 . " , DTHR_TRANS "
@@ -112,18 +110,19 @@ class CabecDAO extends Conn {
                 . " , " . $cabec->aceiroVegetNativalCabec
                 . " , " . $cabec->tipoCabec
                 . " , " . $cabec->comentCabec
-                . " , " . $ajusteDataHoraDAO->dataHoraGMT($cabec->dthrCabec, $base)
+                . " , TO_DATE('" . $cabec->dataInsCabec . "','DD/MM/YYYY')"
+                . " , TO_DATE('" . $cabec->dthrCabec. "','DD/MM/YYYY HH24:MI') "
                 . " , TO_DATE('" . $cabec->dthrCabec. "','DD/MM/YYYY HH24:MI') "
                 . " , SYSDATE "
                 . " , 1 "
                 . " )";
 
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Create = $this->Conn->prepare($sql);
         $this->Create->execute();
     }
     
-    public function cabecReaj($base) {
+    public function cabecReaj() {
 
         $select = " SELECT "
                 . " ID AS \"idExtCabec\" "
@@ -139,7 +138,7 @@ class CabecDAO extends Conn {
                 . " STATUS = 2 "
                 . " ORDER BY ID DESC ";
         
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Read = $this->Conn->prepare($select);
         $this->Read->setFetchMode(PDO::FETCH_ASSOC);
         $this->Read->execute();
@@ -149,7 +148,7 @@ class CabecDAO extends Conn {
         
     }
     
-    public function updCabecCompl($idCabec, $base) {
+    public function updCabecCompl($idCabec) {
 
         $sql = " UPDATE PCQ_CABECALHO "
                 . " SET "
@@ -157,7 +156,7 @@ class CabecDAO extends Conn {
                 . " WHERE "
                 . " ID = " . $idCabec;
         
-        $this->Conn = parent::getConn($base);
+        $this->Conn = parent::getConn();
         $this->Create = $this->Conn->prepare($sql);
         $this->Create->execute();
         
