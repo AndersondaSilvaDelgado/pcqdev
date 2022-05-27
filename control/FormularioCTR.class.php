@@ -5,12 +5,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once('../model/dao/CabecDAO.class.php');
-require_once('../model/dao/ItemDAO.class.php');
-require_once('../model/dao/BrigadistaDAO.class.php');
-require_once('../model/dao/EquipDAO.class.php');
-require_once('../model/dao/FotoDAO.class.php');
-require_once('../model/dao/TalhaoDAO.class.php');
+require_once('../model/CabecDAO.class.php');
+require_once('../model/ItemDAO.class.php');
+require_once('../model/BrigadistaDAO.class.php');
+require_once('../model/EquipDAO.class.php');
+require_once('../model/FotoDAO.class.php');
+require_once('../model/TalhaoDAO.class.php');
 /**
  * Description of Formulario
  *
@@ -21,12 +21,9 @@ class FormularioCTR {
     public function salvarCompleto($info) {
 
         $dados = $info['dado'];
-//        echo 'Dados = ' . $dados;
         $array = explode("_", $dados);
 
-//        $cabec = mb_convert_encoding($cabec, "UTF-8", "ISO-8859-1");
-//
-        $cabecJsonObj = json_decode($array[0]);
+        $cabecJsonObj = json_decode(mb_convert_encoding($array[0], "UTF-8", "ISO-8859-1"));
         $itemJsonObj = json_decode($array[1]);
         $brigadistaJsonObj = json_decode($array[2]);
         $equipJsonObj = json_decode($array[3]);

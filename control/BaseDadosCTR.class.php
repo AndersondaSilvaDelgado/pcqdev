@@ -5,17 +5,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once('../model/dao/BrigadistaDAO.class.php');
-require_once('../model/dao/CabecDAO.class.php');
-require_once('../model/dao/ColabDAO.class.php');
-require_once('../model/dao/EquipDAO.class.php');
-require_once('../model/dao/QuestaoDAO.class.php');
-require_once('../model/dao/OrigemFogoDAO.class.php');
-require_once('../model/dao/RespDAO.class.php');
-require_once('../model/dao/SecaoDAO.class.php');
-require_once('../model/dao/TalhaoDAO.class.php');
-require_once('../model/dao/TercCombDAO.class.php');
-require_once('../model/dao/TipoApontDAO.class.php');
+require_once('../model/BrigadistaDAO.class.php');
+require_once('../model/CabecDAO.class.php');
+require_once('../model/ColabDAO.class.php');
+require_once('../model/EquipDAO.class.php');
+require_once('../model/QuestaoDAO.class.php');
+require_once('../model/OrigemFogoDAO.class.php');
+require_once('../model/RespDAO.class.php');
+require_once('../model/SecaoDAO.class.php');
+require_once('../model/TalhaoDAO.class.php');
+require_once('../model/TercCombDAO.class.php');
+require_once('../model/TipoApontDAO.class.php');
 /**
  * Description of BaseDadosCTR
  *

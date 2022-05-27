@@ -118,6 +118,19 @@ class AtualAplicDAO extends Conn {
         $this->Create = $this->Conn->prepare($sql);
         $this->Create->execute();
     }
+    
+    public function updUltAcesso($aparelho) {
+
+        $sql = "UPDATE PCQ_ATUALIZACAO "
+                . " SET "
+                    . " DTHR_ULT_ACESSO = SYSDATE "
+                . " WHERE "
+                    . " NRO_APARELHO = " . $aparelho;
+
+        $this->Conn = parent::getConn();
+        $this->Create = $this->Conn->prepare($sql);
+        $this->Create->execute();
+    }
 
     public function dataHora() {
 
